@@ -1,0 +1,2330 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>เรียงห้องเพลง</title>
+    <meta
+      name="description"
+      content="เกมเรียงตัวโน้ตที่ตกลงมาให้เต็มห้องเพลงพอดี ฝึกนับค่าตัวโน้ตแบบเกมเรียงบล็อก"
+    />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#dfe9ef" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0f1a21" media="(prefers-color-scheme: dark)" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E
+%3Ccircle cx='12' cy='23' r='6' fill='%23c4421f'/%3E
+%3Cpath d='M17 23V4h4v19' fill='%23c4421f'/%3E%3C/svg%3E"
+    />
+    <meta property="og:title" content="เรียงห้องเพลง" />
+    <meta
+      property="og:description"
+      content="เกมเรียงตัวโน้ตที่ตกลงมาให้เต็มห้องเพลงพอดี ฝึกนับค่าตัวโน้ตแบบเกมเรียงบล็อก"
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="th_TH" />
+    <style>
+      /* สีหลัก */
+      :root {
+        --value-0: 0;
+        --value-16px: 16px;
+        --value-1point-6: 1.6;
+        --value-592px: 592px;
+        --value-12px: 12px;
+        --value-22px: 22px;
+        --value-1point-4: 1.4;
+        --value-18px: 18px;
+        --value-8px: 8px;
+        --value-14px: 14px;
+        --value-1fr: 1fr;
+        --value-13px: 13px;
+        --value-1point-3: 1.3;
+        --value-1px: 1px;
+        --value-4px: 4px;
+        --value-100pct: 100%;
+        --value-6px: 6px;
+        --value-2px: 2px;
+        --value-12point-8px: 12.8px;
+        --value-point-7: 0.7;
+        --value-24px: 24px;
+        --value-700: 700;
+        --value-56px: 56px;
+        --value-44px: 44px;
+        --value-52px: 52px;
+        --value-point-5: 0.5;
+        --value-3px: 3px;
+        --bg: #dfe9ef;
+        --surface: #fff;
+        --surface-2: #f3f8fa;
+        --line: #c6d6e0;
+        --line-strong: #b5c8d4;
+        --text: #17252f;
+        --text-soft: #33454f;
+        --muted: #5f7584;
+        --action: #c4421f;
+        --action-ink: #fff;
+        --action-soft: #fdece7;
+        --blue: #3f6f8d;
+        --blue-soft: #e3eef5;
+        --brass: #9a6a1f;
+        --good: #2e7d59;
+        --warn: #9a6a1f;
+        --bad: #b3261e;
+        --row-h: clamp(26px, calc((100vh - 280px) / 12), 36px);
+        color-scheme: light;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) {
+          --bg: #0f1a21;
+          --surface: #172630;
+          --surface-2: #1c2f3b;
+          --line: #2c4150;
+          --line-strong: #3a5263;
+          --text: #e6eef3;
+          --text-soft: #c3d3dc;
+          --muted: #8ea3b1;
+          --action: #f07a5a;
+          --action-ink: #1b0e09;
+          --action-soft: #3a221b;
+          --blue: #8cb8d3;
+          --blue-soft: #1d3442;
+          --brass: #d9a94f;
+          --good: #7fd1a6;
+          --warn: #e3b04b;
+          --bad: #ff8a80;
+          color-scheme: dark;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: var(--value-0);
+        background: var(--bg);
+        color: var(--text);
+        font:
+          var(--value-16px)/var(--value-1point-6) 'Sarabun',
+          'Leelawadee UI',
+          'Noto Sans Thai',
+          Thonburi,
+          Tahoma,
+          system-ui,
+          sans-serif;
+      }
+      main {
+        max-width: var(--value-592px);
+        margin: auto;
+        padding: var(--value-12px) var(--value-16px);
+      }
+      h1,
+      h2,
+      p {
+        margin: var(--value-0);
+      }
+      h1 {
+        font-size: var(--value-22px);
+        line-height: var(--value-1point-4);
+      }
+      h2 {
+        font-size: var(--value-18px);
+        margin: var(--value-8px) var(--value-0);
+      }
+      header p {
+        color: var(--text-soft);
+        font-size: var(--value-14px);
+      }
+      .hud {
+        display: flex;
+        gap: var(--value-16px);
+        line-height: var(--value-1point-4);
+        margin: var(--value-8px) var(--value-0);
+      }
+      .hud strong {
+        display: block;
+        font-size: var(--value-18px);
+        font-variant-numeric: tabular-nums;
+      }
+      .board-wrap {
+        position: relative;
+      }
+      .beats {
+        display: grid;
+        grid-template-columns: repeat(var(--beats), var(--value-1fr));
+        text-align: center;
+        background: var(--surface);
+        font-size: var(--value-13px);
+        line-height: var(--value-1point-3);
+      }
+      .board {
+        position: relative;
+        height: calc(var(--rows) * var(--row-h));
+        border: var(--value-1px) solid var(--line-strong);
+        border-bottom: var(--value-4px) double var(--text);
+        background: var(--surface);
+        overflow: hidden;
+      }
+      .cell-grid {
+        position: absolute;
+        inset: var(--value-0);
+        display: grid;
+        grid-template-columns: repeat(var(--cols), var(--value-1fr));
+        grid-template-rows: repeat(var(--rows), var(--value-1fr));
+      }
+      .cell-grid span {
+        border-right: var(--value-1px) solid var(--line);
+        border-bottom: var(--value-1px) solid var(--line);
+      }
+      .cell-grid span.is-beat {
+        border-right-color: var(--line-strong);
+      }
+      .bar {
+        position: absolute;
+        left: calc(var(--col) * var(--value-100pct) / var(--cols));
+        top: calc(var(--row) * var(--row-h));
+        width: calc(var(--units) * var(--value-100pct) / var(--cols));
+        height: var(--row-h);
+        border: var(--value-1px) solid var(--blue);
+        border-radius: var(--value-6px);
+        background: var(--blue-soft);
+        display: flex;
+        align-items: center;
+        gap: var(--value-2px);
+        overflow: hidden;
+        color: var(--text);
+        font-size: var(--value-12point-8px);
+        line-height: var(--value-1point-4);
+        white-space: nowrap;
+      }
+      .bar.is-active {
+        background: var(--action-soft);
+        border-color: var(--action);
+      }
+      .bar.is-ghost {
+        background: transparent;
+        border: var(--value-2px) dashed var(--action);
+        opacity: var(--value-point-7);
+      }
+      .bar svg {
+        width: var(--value-24px);
+        height: var(--value-24px);
+        flex: none;
+      }
+      .clear-label {
+        position: absolute;
+        left: var(--value-0);
+        right: var(--value-0);
+        top: calc(var(--row) * var(--row-h));
+        height: var(--row-h);
+        background: var(--good);
+        color: var(--surface);
+        font-weight: var(--value-700);
+        text-align: center;
+        line-height: var(--row-h);
+      }
+      .overlay {
+        position: absolute;
+        inset: var(--value-22px) var(--value-0) var(--value-0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--overlay-bg);
+        text-align: center;
+      }
+      .overlay[hidden] {
+        display: none;
+      }
+      .overlay > div {
+        background: var(--surface);
+        padding: var(--value-16px);
+        border: var(--value-1px) solid var(--line);
+        border-radius: var(--value-18px);
+      }
+      .overlay h2 {
+        margin: var(--value-0);
+        font-size: var(--value-22px);
+      }
+      .controls {
+        display: flex;
+        justify-content: center;
+        gap: var(--value-8px);
+        margin-top: var(--value-8px);
+        user-select: none;
+      }
+      .controls button {
+        min-width: var(--value-56px);
+        min-height: var(--value-56px);
+      }
+      .actions {
+        display: flex;
+        gap: var(--value-8px);
+        flex-wrap: wrap;
+        margin: var(--value-8px) var(--value-0);
+      }
+      .actions[hidden] {
+        display: none;
+      }
+      button {
+        font: inherit;
+        color: var(--text);
+        background: var(--surface-2);
+        border: var(--value-1px) solid var(--line);
+        border-radius: var(--value-12px);
+        min-height: var(--value-44px);
+        padding: var(--value-8px) var(--value-12px);
+        touch-action: manipulation;
+        cursor: pointer;
+      }
+      button.primary {
+        background: var(--action);
+        color: var(--action-ink);
+        border-color: var(--action);
+        font-weight: var(--value-700);
+        min-height: var(--value-52px);
+      }
+      button:disabled {
+        opacity: var(--value-point-5);
+      }
+      button:focus-visible,
+      summary:focus-visible,
+      input:focus-visible {
+        outline: var(--value-3px) solid var(--blue);
+        outline-offset: var(--value-2px);
+      }
+      .segments {
+        display: flex;
+        flex-wrap: wrap;
+        gap: var(--value-8px);
+      }
+      .segments button[aria-pressed='true'] {
+        background: var(--surface);
+        border-color: var(--blue);
+        outline: var(--value-1px) solid var(--blue);
+      }
+      .options,
+      .settings,
+      #checkResult {
+        background: var(--surface);
+        border: var(--value-1px) solid var(--line);
+        border-radius: var(--value-18px);
+        padding: var(--value-16px);
+        margin-top: var(--value-16px);
+      }
+      .settings summary {
+        font-weight: var(--value-700);
+        cursor: pointer;
+        min-height: var(--value-44px);
+      }
+      .settings label {
+        display: block;
+      }
+      .settings input[type="range"] {
+        width: var(--value-100pct);
+      }
+      #checkResult .is-pass {
+        color: var(--good);
+      }
+      #checkResult .is-fail {
+        color: var(--bad);
+      }
+      [data-slot]:empty,
+      #notice:empty {
+        display: none;
+      }
+      .hint,
+      footer {
+        font-size: var(--value-14px);
+        color: var(--text-soft);
+      }
+      footer {
+        margin-top: var(--value-24px);
+      }
+      .board-wrap {
+        --overlay-bg: color-mix(in srgb, var(--bg) 80%, transparent);
+      }
+      @supports not (background: color-mix(in srgb, red, transparent)) {
+        .board-wrap {
+          --overlay-bg: var(--bg);
+        }
+      }
+      /* สีของเกม */
+      :root {
+        --piece-rest-bg: var(--surface-2); /* พื้นชิ้นตัวหยุด */
+        --piece-rest-line: var(--text-soft); /* ขอบชิ้นตัวหยุด */
+        --danger-bg: var(--action-soft); /* พื้นแถบเตือน */
+        --earned-medal: var(--action-soft); /* พื้นเหรียญที่ได้รับ */
+        /* ขนาดและระยะ */
+        --companion-space: 8px; /* ระยะห่างหน้าควบคุม */
+        --note-size: 26px; /* ตัวโน้ตในแถบเสริม */
+        --hold-size: 28px; /* ช่องเก็บชิ้น */
+        --touch-size: 52px; /* ความกว้างขั้นต่ำปุ่มเล่น */
+        --five-gap: 4px; /* ระยะห่างปุ่มเล่น */
+        --row-h: clamp(26px, calc((100vh - 300px) / 12), 36px); /* ความสูงหนึ่งแถว */
+        --pop-span: 200ms; /* ระยะเคลื่อนไหวคะแนน */
+        --pop-rise: 12px; /* ระยะลอยของคะแนน */
+        --outcome-delay: 90ms; /* ระยะห่างของข้อมูลในหน้าผล */
+        --danger-edge: 2px; /* เส้นขอบแถบเตือน */
+      }
+      [hidden] { display: none !important; }
+      .mode-list {
+        display: grid;
+        gap: var(--companion-space);
+        margin-block-end: var(--companion-space);
+      }
+      .mode-list button { text-align: start; }
+      .mode-list button small { display: block; color: var(--text-soft); }
+      .mode-list button[aria-pressed='true'] { border-color: var(--action); }
+      [data-screen='play'] .hud {
+        font-size: var(--value-14px);
+        flex-wrap: wrap;
+        gap: var(--companion-space);
+      }
+      .queue-panel, #targetCard {
+        align-items: center;
+        background: var(--surface);
+        border: var(--value-1px) solid var(--line);
+        display: flex;
+        justify-content: space-between;
+        min-height: var(--hold-size);
+        margin-block-end: var(--five-gap);
+        padding-inline: var(--companion-space);
+      }
+      #targetCard { flex-wrap: wrap; font-size: var(--value-13px); }
+      .notation { display: inline-flex; align-items: center; column-gap: var(--five-gap); }
+      .notation svg, #howtoList svg, #badgeList svg {
+        width: var(--note-size);
+        height: var(--note-size);
+        vertical-align: middle;
+      }
+      #held {
+        border: var(--value-1px) dashed var(--line-strong);
+        min-width: var(--hold-size);
+        height: var(--hold-size);
+        vertical-align: middle;
+      }
+      .controls { gap: var(--five-gap); }
+      .controls button {
+        flex: 1;
+        min-height: var(--touch-size);
+        min-width: var(--touch-size);
+        padding-inline: var(--five-gap);
+      }
+      .bar.is-rest { background: var(--piece-rest-bg); border: var(--value-1px) dashed var(--piece-rest-line); }
+      .danger-row {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        height: calc(var(--row-h) * var(--danger-rows));
+        border-block-end: var(--danger-edge) solid var(--bad);
+        background: var(--danger-bg);
+        pointer-events: none;
+        color: var(--bad);
+        padding-inline: var(--companion-space);
+      }
+      .lesson {
+        font-size: var(--value-14px);
+        margin-block: var(--companion-space);
+      }
+      .lesson svg { display: block; width: 100%; max-height: var(--note-size); }
+      .medal circle { fill: none; }
+      .medal.earned circle { fill: var(--earned-medal); }
+      #usedPieces > p { display: flex; gap: var(--companion-space); align-items: center; }
+      #usedPieces svg { width: var(--note-size); height: var(--note-size); }
+      #usedPieces meter { accent-color: var(--action); }
+      #toast:not([hidden]) {
+        position: fixed;
+        inset-inline-end: var(--companion-space);
+        inset-block-end: var(--companion-space);
+        background: var(--surface);
+        padding: var(--companion-space);
+        border: var(--value-1px) solid var(--good);
+      }
+      #targetCard.did-match {
+        background: var(--blue-soft);
+        border-color: var(--good);
+      }
+      #resultDetails p {
+        opacity: 0;
+        transition: opacity var(--pop-span);
+        transition-delay: calc(var(--outcome-delay) * var(--result-order, 0));
+      }
+      #resultDetails.is-revealed p,
+      :root[data-reduce='true'] #resultDetails p {
+        opacity: 1;
+      }
+      .score-pop { animation: score-pop var(--pop-span) ease-out; }
+      @keyframes score-pop {
+        from { transform: translateY(var(--pop-rise)); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+      :root[data-reduce='true'] * { animation: none !important; transition: none !important; }
+      @media (prefers-reduced-motion: reduce) {
+        .score-pop { animation: none; }
+        #resultDetails p { opacity: 1; transition: none; }
+      }
+      :root[data-theme="dark"] {
+          --bg: #0f1a21;
+          --surface: #172630;
+          --surface-2: #1c2f3b;
+          --line: #2c4150;
+          --line-strong: #3a5263;
+          --text: #e6eef3;
+          --text-soft: #c3d3dc;
+          --muted: #8ea3b1;
+          --action: #f07a5a;
+          --action-ink: #1b0e09;
+          --action-soft: #3a221b;
+          --blue: #8cb8d3;
+          --blue-soft: #1d3442;
+          --brass: #d9a94f;
+          --good: #7fd1a6;
+          --warn: #e3b04b;
+          --bad: #ff8a80;
+          color-scheme: dark;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section data-screen="home">
+        <header>
+          <h1 tabindex="-1">เรียงห้องเพลง</h1>
+          <p>เรียงตัวโน้ตให้เต็มห้อง แล้วฟังจังหวะที่คุณสร้าง</p>
+        </header>
+        <h2>เลือกโหมด</h2>
+        <div id="modeList" class="mode-list"></div>
+        <div id="slotHome" data-slot="home"></div>
+        <h2>อัตราจังหวะ</h2>
+        <div id="meterList" class="segments"></div>
+        <h2>ระดับ</h2>
+        <div id="levels" class="segments"></div>
+        <p id="homeBest"></p>
+        <p id="targetNotice" role="status"></p>
+        <div class="actions">
+          <button id="start" class="primary">เริ่มเล่น</button>
+          <button id="howtoShow">วิธีเล่น</button>
+          <button id="badgeShow">เหรียญของฉัน</button>
+        </div>
+        <div id="medals" class="notation"></div>
+      </section>
+      <section data-screen="play" hidden>
+        <h1 tabindex="-1">เรียงห้องเพลง</h1>
+        <div class="hud">
+          <span>คะแนน <strong id="score">0</strong></span>
+          <span>ห้องที่ครบ <strong id="measures">0</strong></span>
+          <span>ความเร็ว <strong id="speed">1</strong></span>
+          <span id="combo"></span>
+          <span id="sprintClock" hidden>เวลา <strong id="sprintTime"></strong></span>
+          <div id="slotHud" data-slot="hud"></div>
+        </div>
+        <div class="queue-panel">
+          <div>ถัดไป <span id="queue" class="notation"></span></div>
+          <div>เก็บ <span id="held" class="notation"></span></div>
+        </div>
+        <div id="targetCard" hidden>
+          <strong>โจทย์</strong>
+          <span id="targetNotes" class="notation"></span>
+          <small>เรียงจากซ้ายไปขวาให้ตรงกัน</small>
+        </div>
+        <div class="board-wrap">
+          <div id="beats" class="beats"></div>
+          <div id="board" class="board" aria-label="ห้องเพลง"></div>
+        </div>
+        <div class="controls" aria-label="ปุ่มควบคุม">
+          <button data-control="left">ซ้าย</button>
+          <button data-control="right">ขวา</button>
+          <button data-control="down">ลง</button>
+          <button data-control="drop">วาง</button>
+          <button data-control="hold">เก็บ</button>
+        </div>
+        <div id="lastMeasure" class="lesson">
+          <p id="lastCount">เติมห้องแรกให้ครบ แล้วจะเห็นจังหวะของห้องนั้นตรงนี้</p>
+          <div id="lastNotation"></div>
+        </div>
+        <div class="actions">
+          <button id="pause">หยุดชั่วคราว</button><button id="quit">ออก</button>
+          <div id="slotActions" data-slot="actions"></div>
+        </div>
+        <div id="slotPanel" data-slot="panel"></div>
+        <p class="hint">คีย์บอร์ด: ลูกศรเพื่อเลื่อนและเร่ง Space เพื่อวาง C เพื่อเก็บ P เพื่อหยุด</p>
+      </section>
+      <section data-screen="paused" hidden>
+        <h1 tabindex="-1">หยุดชั่วคราว</h1>
+        <p>กดเล่นต่อเมื่อพร้อม</p>
+        <button id="resume" class="primary">เล่นต่อ</button>
+      </section>
+      <section data-screen="howto" hidden>
+        <h1 tabindex="-1">วิธีเล่น</h1>
+        <ol id="howtoList"></ol>
+        <button id="howtoClose" class="primary">ไปหน้าแรก</button>
+      </section>
+      <section data-screen="badges" hidden>
+        <h1 tabindex="-1">เหรียญของฉัน</h1>
+        <ul id="badgeList"></ul>
+        <button id="badgeClose">ไปหน้าแรก</button>
+      </section>
+      <section data-screen="result" hidden>
+        <h1 id="resultTitle" tabindex="-1"></h1>
+        <h2 id="resultScore"></h2>
+        <div id="resultDetails"></div>
+        <h2>ตัวโน้ตที่ใช้</h2>
+        <div id="usedPieces"></div>
+        <p id="advice"></p>
+        <div id="slotResult" data-slot="result"></div>
+        <div class="actions">
+          <button id="again" class="primary">เล่นอีกครั้ง</button>
+          <button id="modeBack">เปลี่ยนโหมด</button>
+        </div>
+      </section>
+      <p id="notice" role="status"></p>
+      <p id="toast" role="status" aria-live="polite" hidden></p>
+      <details class="settings">
+        <summary>ตั้งค่า</summary>
+        <label for="theme">ธีม</label>
+        <select id="theme"><option value="auto">อัตโนมัติ</option>
+          <option value="light">สว่าง</option><option value="dark">มืด</option></select>
+        <label><input id="reduce" type="checkbox"> ลดการเคลื่อนไหว</label>
+        <button id="clearStats">ล้างข้อมูลของเกมนี้</button>
+        <label for="volume">ระดับเสียง</label
+        ><input id="volume" type="range" min="0" max="100" value="25" />
+        <div class="actions">
+          <button id="sound">ทดสอบเสียง</button><button id="check">ตรวจระบบ</button>
+        </div>
+        <div id="checkResult" hidden></div>
+      </details>
+      <footer>เรียงห้องเพลง · สร้างด้วย AI ช่วย · วิชา 3500230</footer>
+    </main>
+    <script>
+      (function () {
+        'use strict';
+        /* ═══════════ โซน A · ข้อมูล (แก้ได้) ═══════════ */
+        /* ตัวโน้ต: id คือรหัส units คือจำนวนช่อง name คือชื่อ head คือรูปหัว stem คือก้าน flag คือธง dot คือจุด */
+        var PIECES = [
+          {
+            id: 'eighth',
+            units: 1,
+            name: 'เขบ็ตหนึ่งชั้น',
+            head: 'filled',
+            stem: true,
+            flag: true,
+            dot: false
+          },
+          {
+            id: 'quarter',
+            units: 2,
+            name: 'ตัวดำ',
+            head: 'filled',
+            stem: true,
+            flag: false,
+            dot: false
+          },
+          {
+            id: 'dottedQuarter',
+            units: 3,
+            name: 'ตัวดำประจุด',
+            head: 'filled',
+            stem: true,
+            flag: false,
+            dot: true
+          },
+          {
+            id: 'half',
+            units: 4,
+            name: 'ตัวขาว',
+            head: 'open',
+            stem: true,
+            flag: false,
+            dot: false
+          },
+          {
+            id: 'dottedHalf',
+            units: 6,
+            name: 'ตัวขาวประจุด',
+            head: 'open',
+            stem: true,
+            flag: false,
+            dot: true
+          },
+          {
+            id: 'whole',
+            units: 8,
+            name: 'ตัวกลม',
+            head: 'open',
+            stem: false,
+            flag: false,
+            dot: false
+          },
+          { id: "eighthRest", units: 1, name: "ตัวหยุดเขบ็ตหนึ่งชั้น", rest: true, restShape: "eighth" },
+          { id: "quarterRest", units: 2, name: "ตัวหยุดตัวดำ", rest: true, restShape: "quarter" },
+          { id: "halfRest", units: 4, name: "ตัวหยุดตัวขาว", rest: true, restShape: "half" }
+        ];
+        /* ระดับ: id คือรหัส label คือชื่อ pieces คือน้ำหนักแต่ละชิ้น startFallMs คือเวลาตกต่อแถวเป็นมิลลิวินาที */
+        var LEVELS = [
+          {
+            id: 'easy',
+            label: 'ง่าย',
+            pieces: { half: 3, quarter: 4, whole: 1 },
+            startFallMs: 900
+          },
+          {
+            id: 'medium',
+            label: 'กลาง',
+            pieces: { half: 2, quarter: 4, eighth: 3, dottedQuarter: 2, whole: 1, quarterRest: 1 },
+            startFallMs: 750
+          },
+          {
+            id: 'hard',
+            label: 'ยาก',
+            pieces: {
+              half: 2,
+              quarter: 3,
+              eighth: 3,
+              dottedQuarter: 3,
+              dottedHalf: 2,
+              whole: 1,
+              quarterRest: 1,
+              eighthRest: 1,
+              halfRest: 1
+            },
+            startFallMs: 600
+          }
+        ];
+        // รหัสอัตรา ชื่อ จำนวนจังหวะ และคำอธิบาย
+        var METERS = [
+          { id: "2/4", label: "2/4", beats: 2, about: "ห้องละ 2 จังหวะ" },
+          { id: "3/4", label: "3/4", beats: 3, about: "ห้องละ 3 จังหวะ" },
+          { id: "4/4", label: "4/4", beats: 4, about: "ห้องละ 4 จังหวะ" }
+        ];
+        // อัตรา ระดับ และลำดับชิ้นสำหรับโจทย์จังหวะ
+        var TARGETS = [
+          { meter: "4/4", level: "easy", pieces: ["quarter", "quarter", "half"] },
+          { meter: "4/4", level: "easy", pieces: ["half", "quarter", "quarter"] },
+          { meter: "4/4", level: "easy", pieces: ["quarter", "half", "quarter"] },
+          { meter: "4/4", level: "easy", pieces: ["half", "half"] },
+          { meter: "4/4", level: "easy", pieces: ["quarter", "quarter", "quarter", "quarter"] },
+          { meter: "4/4", level: "medium", pieces: ["dottedQuarter", "eighth", "half"] },
+          { meter: "4/4", level: "medium", pieces: ["eighth", "eighth", "quarter", "half"] },
+          { meter: "4/4", level: "medium", pieces: ["quarter", "eighth", "eighth", "half"] },
+          { meter: "4/4", level: "medium", pieces: ["dottedQuarter", "eighth", "quarter", "quarter"] },
+          { meter: "4/4", level: "medium", pieces: ["quarter", "quarterRest", "half"] },
+          { meter: "4/4", level: "hard", pieces: ["dottedHalf", "quarter"] },
+          { meter: "4/4", level: "hard", pieces: ["eighth", "quarter", "eighth", "half"] },
+          { meter: "4/4", level: "hard", pieces: ["dottedQuarter", "dottedQuarter", "quarter"] },
+          { meter: "4/4", level: "hard", pieces: ["quarter", "dottedHalf"] },
+          { meter: "4/4", level: "hard", pieces: ["eighthRest", "eighth", "quarter", "half"] },
+          { meter: "3/4", level: "easy", pieces: ["quarter", "quarter", "quarter"] },
+          { meter: "3/4", level: "easy", pieces: ["half", "quarter"] },
+          { meter: "3/4", level: "easy", pieces: ["quarter", "half"] },
+          { meter: "2/4", level: "easy", pieces: ["quarter", "quarter"] },
+          { meter: "2/4", level: "easy", pieces: ["half"] }
+        ];
+        // รหัส ชื่อ และคำอธิบายของโหมด
+        var MODES = [
+          { id: "marathon", label: "มาราธอน", about: "เล่นไปเรื่อย ๆ จนกว่ากองจะถึงขอบบน ยิ่งนานยิ่งเร็ว" },
+          { id: "target", label: "โจทย์จังหวะ", about: "เรียงตัวโน้ตให้ตรงกับจังหวะที่โจทย์กำหนด ได้คะแนนพิเศษ" },
+          { id: "sprint", label: "12 ห้อง", about: "เติมให้ครบ 12 ห้องให้เร็วที่สุด" }
+        ];
+        // เหรียญที่ได้รับตามเงื่อนไขและจำนวนเป้าหมาย
+        var BADGES = [
+          { id: "first10", name: "สิบห้องแรก", hint: "เติมครบ 10 ห้องในเกมเดียว", test: "measures", goal: 10 },
+          { id: "combo3", name: "ต่อเนื่อง", hint: "ทำคอมโบ 3 ห้องติดกัน", test: "combo", goal: 3 },
+          { id: "target5", name: "ตรงโจทย์", hint: "ทำตามโจทย์ได้ 5 ครั้งในเกมเดียว", test: "targets", goal: 5 },
+          { id: "sprint90", name: "ทันใจ", hint: "จบ 12 ห้องภายใน 90 วินาที", test: "sprint", goal: 90000 },
+          { id: "fullSound", name: "เสียงเต็มห้อง", hint: "เติม 8 ห้องโดยไม่ใช้ตัวหยุด", test: "sound", goal: 8 },
+          { id: "allMeters", name: "ครบทุกอัตรา", hint: "เล่นจบครบทั้ง 2/4, 3/4 และ 4/4", test: "meter", goal: 3 },
+          { id: "score3000", name: "สามพันแต้ม", hint: "ทำได้ 3,000 คะแนน", test: "score", goal: 3000 }
+        ];
+        // ทำนองไต่ระดับสำหรับห้องที่สร้างสำเร็จ หน่วยเฮิรตซ์
+        var MELODY_HZ = [261.63, 293.66, 329.63, 392, 440, 523.25, 587.33, 659.25];
+        // ข้อแนะนำในหน้าวิธีเล่น
+        var HOWTO = [
+          'ตัวโน้ตแต่ละชิ้นกว้างเท่ากับความยาวของเสียง',
+          'เลื่อนซ้ายขวา แล้ววางให้เต็มแถวพอดี หนึ่งแถวคือหนึ่งห้องเพลง',
+          'ครบห้องเมื่อไร จะได้ยินจังหวะของห้องนั้นและได้คะแนน',
+          'ดูชิ้นถัดไป และใช้ปุ่มเก็บ เพื่อวางแผนล่วงหน้า'
+        ];
+        /* ═══════════ โซน B · ตั้งค่า (แก้ได้) ═══════════ */
+        var CONFIG = {
+          targetBonus: 300, /* คะแนนเพิ่มเมื่อตรงโจทย์ */
+          fullSoundBonus: 50, /* คะแนนเพิ่มเมื่อไม่มีตัวหยุด */
+          sprintGoal: 12, /* จำนวนห้องเป้าหมาย */
+          dangerRows: 3, /* จำนวนแถวบนที่ใช้เตือน */
+          queueLength: 2, /* จำนวนชิ้นล่วงหน้า */
+          comboCap: 3, /* ตัวคูณสูงสุด */
+          resultCountMs: 400, /* ระยะนับคะแนนเป็นมิลลิวินาที */
+          resultTickMs: 40, /* ช่วงอัปเดตคะแนนเป็นมิลลิวินาที */
+          toastMs: 2500, /* ระยะข้อความเป็นมิลลิวินาที */
+          unitsPerBeat: 2 /* จำนวนช่องต่อจังหวะ */,
+          beatsPerMeasure: 4 /* จำนวนจังหวะต่อห้อง */,
+          rows: 12 /* จำนวนแถวที่มองเห็น */,
+          speedUpEvery: 4 /* จำนวนห้องต่อการเพิ่มความเร็ว */,
+          speedFactor: 0.9 /* ตัวคูณเวลาตก */,
+          minFallMs: 220 /* เวลาตกต่ำสุดต่อแถวเป็นมิลลิวินาที */,
+          softDropMs: 50 /* เวลาตกเมื่อกดลงเป็นมิลลิวินาที */,
+          clearShowMs: 320 /* เวลาแสดงห้องที่ครบเป็นมิลลิวินาที */,
+          scorePerMeasure: 100 /* คะแนนต่อห้อง */,
+          scorePerPiece: 10 /* คะแนนต่อชิ้น */,
+          rhythmSeconds: 1 /* ระยะเสียงหนึ่งห้องเป็นวินาที */,
+          rhythmHz: 392 /* ความถี่เสียงจังหวะเป็นเฮิรตซ์ */,
+          repeatDelayMs: 250 /* เวลาก่อนเลื่อนซ้ำเป็นมิลลิวินาที */,
+          repeatMs: 90 /* ระยะห่างการเลื่อนซ้ำเป็นมิลลิวินาที */,
+          confirmMs: 4000 /* เวลายืนยันเป็นมิลลิวินาที */,
+          audioRampSec: 0.01 /* เวลาไล่ระดับเสียงเป็นวินาที */,
+          masterGain: 0.2 /* ระดับเกนหลัก */,
+          defaultVolumePercent: 25 /* ระดับเสียงเริ่มต้นเป็นร้อยละ */,
+          lockToneHz: 220 /* ความถี่เสียงวางชิ้นเป็นเฮิรตซ์ */,
+          lockToneSec: 0.04 /* ความยาวเสียงวางชิ้นเป็นวินาที */,
+          overHighHz: 330 /* ความถี่เสียงแรกเมื่อจบเกมเป็นเฮิรตซ์ */,
+          overLowHz: 220 /* ความถี่เสียงที่สองเมื่อจบเกมเป็นเฮิรตซ์ */,
+          overFirstSec: 0.2 /* ความยาวเสียงแรกเมื่อจบเกมเป็นวินาที */,
+          overSecondSec: 0.3 /* ความยาวเสียงที่สองเมื่อจบเกมเป็นวินาที */,
+          testToneHz: 440 /* ความถี่เสียงทดสอบเป็นเฮิรตซ์ */,
+          testToneSec: 0.5 /* ความยาวเสียงทดสอบเป็นวินาที */
+        };
+        /* ═══════════ โซน C · แกนเกม (ห้ามแก้) ═══════════ */
+        var Core = {};
+
+        // คำนวณจำนวนช่องต่อห้อง
+        Core.cols = function (config) {
+          return config.unitsPerBeat * config.beatsPerMeasure;
+        };
+
+        // สร้างพื้นที่ว่างสำหรับเล่น
+        Core.emptyGrid = function (config) {
+          return Array.from({ length: config.rows }, function () {
+            return Array(Core.cols(config)).fill(null);
+          });
+        };
+
+        // สับถุงชิ้นโน้ต
+        Core.shuffle = function (a, rng) {
+          a = a.slice();
+          for (var i = a.length - 1; i > 0; i--) {
+            var j = Math.floor(rng() * (i + 1)),
+              t = a[i];
+            a[i] = a[j];
+            a[j] = t;
+          }
+          return a;
+        };
+
+        // หยิบชิ้นถัดไปจากถุงถ่วงน้ำหนัก
+        Core.nextKind = function (state, level, rng) {
+          var bag = state.bag.slice();
+          if (!bag.length) {
+            Object.keys(level.pieces).forEach(function (id) {
+              var piece = PIECES.find(function (p) {
+                return p.id === id;
+              });
+              if (!piece || piece.units > state.grid[0].length) return;
+              for (var i = 0; i < level.pieces[id]; i++) bag.push(id);
+            });
+            bag = Core.shuffle(bag, rng);
+          }
+          var kind = bag.pop();
+          return { state: Object.assign({}, state, { bag: bag }), kind: kind };
+        };
+
+        // ตรวจว่าชิ้นวางได้ในตำแหน่งที่ระบุ
+        Core.canPlace = function (grid, piece, row, col) {
+          if (row < 0 || row >= grid.length || col < 0 || col + piece.units > grid[0].length)
+            return false;
+          for (var i = 0; i < piece.units; i++) if (grid[row][col + i]) return false;
+          return true;
+        };
+
+        // นำชิ้นเข้าจากด้านบน
+        Core.spawn = function (state, kind) {
+          var data = PIECES.find(function (p) {
+            return p.id === kind;
+          });
+          if (!data) return Object.assign({}, state, { over: true, piece: null });
+          var piece = {
+            kind: kind,
+            units: data.units,
+            row: 0,
+            col: Math.floor((state.grid[0].length - data.units) / 2),
+            rest: !!data.rest
+          };
+          return Core.canPlace(state.grid, piece, piece.row, piece.col)
+            ? Object.assign({}, state, { piece: piece })
+            : Object.assign({}, state, { piece: piece, over: true });
+        };
+
+        // เตรียมสถานะเกมใหม่
+        Core.newGame = function (level, config, rng) {
+          var state = {
+            grid: Core.emptyGrid(config), piece: null, score: 0, measures: 0, fallMs: level.startFallMs,
+            bag: [], over: false, config: Object.assign({}, config), nextPieceId: 1,
+            queue: [], level: level, mode: config.mode || 'marathon', meter: config.meter || '4/4',
+            held: null, holdUsed: false, holdUses: 0, combo: 0, bestCombo: 0,
+            pieceCounts: {}, targetsHit: 0, fullSoundMeasures: 0, target: null
+          };
+          if (state.mode === 'target') state.target = Core.nextTarget(state, rng);
+          var draw = Core.nextKind(state, level, rng);
+          return Core.fillQueue(Core.spawn(draw.state, draw.kind), level, rng);
+        };
+
+        // เลื่อนชิ้นที่กำลังตก
+        Core.move = function (state, dCol) {
+          if (state.over || !state.piece) return state;
+          var p = state.piece;
+          if (!Core.canPlace(state.grid, p, p.row, p.col + dCol)) return state;
+          return Object.assign({}, state, {
+            piece: Object.assign({}, p, { col: p.col + dCol })
+          });
+        };
+
+        // เลื่อนลงหนึ่งแถวหรือล็อกชิ้นที่วางถึงพื้น
+        Core.stepDown = function (state) {
+          if (state.over || !state.piece) return { state: state, locked: false, fullRow: -1 };
+          var p = state.piece;
+          if (Core.canPlace(state.grid, p, p.row + 1, p.col))
+            return {
+              state: Object.assign({}, state, {
+                piece: Object.assign({}, p, { row: p.row + 1 })
+              }),
+              locked: false,
+              fullRow: -1
+            };
+          var grid = state.grid.map(function (row) {
+            return row.slice();
+          });
+          for (var i = 0; i < p.units; i++)
+            grid[p.row][p.col + i] = {
+              pieceId: state.nextPieceId,
+              kind: p.kind,
+              startCol: p.col,
+              units: p.units,
+              rest: !!p.rest
+            };
+          var full = grid[p.row].every(Boolean);
+          var combo = full ? state.combo + 1 : 0;
+          var pieceCounts = Object.assign({}, state.pieceCounts);
+          pieceCounts[p.kind] = (pieceCounts[p.kind] || 0) + 1;
+          var next = Object.assign({}, state, {
+            grid: grid, piece: null, nextPieceId: state.nextPieceId + 1, holdUsed: false,
+            combo: combo, bestCombo: Math.max(state.bestCombo, combo), pieceCounts: pieceCounts
+          });
+          return { state: next, locked: true, fullRow: full ? p.row : -1 };
+        };
+
+        // วางชิ้นลงที่ตำแหน่งต่ำสุด
+        Core.hardDrop = function (state) {
+          var result;
+          do {
+            result = Core.stepDown(state);
+            state = result.state;
+          } while (!result.locked && !state.over && state.piece);
+          return result;
+        };
+
+        // คืนจังหวะของแถวตามลำดับช่อง
+        Core.rowRhythm = function (grid, row) {
+          var seen = {},
+            result = [];
+          grid[row].forEach(function (cell) {
+            if (cell && !seen[cell.pieceId]) {
+              seen[cell.pieceId] = true;
+              result.push({
+                startCol: cell.startCol,
+                units: cell.units,
+                kind: cell.kind,
+                rest: !!cell.rest
+              });
+            }
+          });
+          return result.sort(function (a, b) {
+            return a.startCol - b.startCol;
+          });
+        };
+
+        // ล้างแถวที่ครบและเพิ่มคะแนน
+        Core.clearRow = function (state, row, rng) {
+          var rhythm = Core.rowRhythm(state.grid, row);
+          var config = state.config;
+          var grid = state.grid.map(function (r) { return r.slice(); });
+          grid.splice(row, 1);
+          grid.unshift(Array(state.grid[0].length).fill(null));
+          var measures = state.measures + 1;
+          var fallMs = state.fallMs;
+          var sprint = state.mode === 'sprint';
+          if (!sprint && measures % config.speedUpEvery === 0) {
+            fallMs = Math.max(config.minFallMs, fallMs * config.speedFactor);
+          }
+          var fullSound = !rhythm.some(function (piece) { return piece.rest; });
+          var matchedTarget = state.mode === 'target' && Core.matchesTarget(rhythm, state.target);
+          var comboFactor = Math.min(config.comboCap, 1 + 0.5 * (Math.max(state.combo, 1) - 1));
+          var delta = (config.scorePerMeasure + config.scorePerPiece * rhythm.length) * comboFactor;
+          if (fullSound) delta += config.fullSoundBonus;
+          if (matchedTarget) delta += config.targetBonus;
+          return Object.assign({}, state, {
+            grid: grid, score: state.score + delta, measures: measures, fallMs: fallMs,
+            fullSoundMeasures: state.fullSoundMeasures + Number(fullSound),
+            lastRhythm: rhythm, matchedTarget: matchedTarget, targetsHit: state.targetsHit + Number(matchedTarget),
+            target: matchedTarget ? Core.nextTarget(state, rng || Math.random) : state.target,
+            success: sprint && measures >= config.sprintGoal
+          });
+        };
+
+        // กำหนดเวลาเสียงแต่ละตัวในห้อง
+        Core.rhythmSchedule = function (rhythm, config) {
+          var cols = Core.cols(config);
+          return rhythm.map(function (p) {
+            return {
+              atSec: (p.startCol / cols) * config.rhythmSeconds,
+              durSec: (p.units / cols) * config.rhythmSeconds * 0.9,
+              rest: !!p.rest
+            };
+          });
+        };
+
+        // ตรวจว่าระดับมีชิ้นที่รวมกันเต็มห้องได้
+        Core.canFill = function (level, config) {
+          var cols = Core.cols(config),
+            possible = Array(cols + 1).fill(false);
+          possible[0] = true;
+          for (var i = 1; i <= cols; i++)
+            Object.keys(level.pieces).forEach(function (id) {
+              var p = PIECES.find(function (x) {
+                return x.id === id;
+              });
+              if (p && p.units <= i && possible[i - p.units]) possible[i] = true;
+            });
+          return possible[cols];
+        };
+
+        // เติมสองชิ้นในคิวโดยดึงจากถุงที่มีอยู่
+        Core.fillQueue = function (state, level, rng) {
+          var queue = state.queue.slice();
+          while (queue.length < state.config.queueLength) {
+            var draw = Core.nextKind(state, level, rng);
+            state = draw.state;
+            if (!draw.kind) break;
+            queue.push(draw.kind);
+          }
+          return Object.assign({}, state, { queue: queue, next: queue[0] || null });
+        };
+
+        // นำชิ้นแรกออกจากคิวแล้วเติมชิ้นที่ขาด
+        Core.spawnQueued = function (state, rng) {
+          var next = state.queue[0];
+          var updated = Object.assign({}, state, { queue: state.queue.slice(1) });
+          return Core.fillQueue(Core.spawn(updated, next), state.level, rng);
+        };
+
+        // เก็บชิ้นที่กำลังตกและจำกัดให้ใช้ครั้งเดียวต่อชิ้น
+        Core.hold = function (state, rng) {
+          if (state.holdUsed || !state.piece || state.over) return state;
+          var held = state.held;
+          var updated = Object.assign({}, state, {
+            held: state.piece.kind,
+            holdUsed: true,
+            holdUses: state.holdUses + 1
+          });
+          return held ? Core.spawn(updated, held) : Core.spawnQueued(updated, rng || Math.random);
+        };
+
+        // เลือกเฉพาะโจทย์ในอัตราและระดับที่เล่นได้
+        Core.targetsFor = function (meter, levelId) {
+          return TARGETS.filter(function (target) {
+            return target.meter === meter && levelRank(target.level) <= levelRank(levelId);
+          });
+        };
+
+        // คืนลำดับความยากของระดับที่ระบุ
+        function levelRank(id) {
+          return LEVELS.findIndex(function (level) { return level.id === id; });
+        }
+
+        // สุ่มโจทย์โดยเว้นโจทย์ที่เพิ่งเล่นเมื่อมีตัวเลือกอื่น
+        Core.nextTarget = function (state, rng) {
+          var choices = Core.targetsFor(state.meter, state.level.id);
+          var others = choices.filter(function (entry) { return entry !== state.target; });
+          if (others.length) choices = others;
+          return choices[Math.floor(rng() * choices.length)] || null;
+        };
+
+        // ตรวจว่าชิ้นในห้องตรงกับโจทย์และเรียงถูกลำดับ
+        Core.matchesTarget = function (rhythm, target) {
+          return Boolean(target) && rhythm.length === target.pieces.length && rhythm.every(function (piece, index) {
+            return piece.kind === target.pieces[index];
+          });
+        };
+
+        // สร้างคำบอกจังหวะที่ชิ้นแต่ละชิ้นเริ่ม
+        Core.countingText = function (rhythm, config) {
+          return rhythm.map(function (piece) {
+            if (piece.rest) return '(หยุด)';
+            var beat = Math.floor(piece.startCol / config.unitsPerBeat) + 1;
+            return String(beat) + (piece.startCol % config.unitsPerBeat === 0 ? '' : 'และ');
+          }).join(' · ');
+        };
+
+        // ตรวจว่ากองชิ้นขึ้นมาถึงแถวเตือนภัยหรือยัง
+        Core.isDanger = function (grid, dangerRows) {
+          return grid.slice(0, dangerRows || CONFIG.dangerRows).some(function (row) {
+            return row.some(Boolean);
+          });
+        };
+
+        // เลือกคำแนะนำที่สอดคล้องกับพฤติกรรมในรอบล่าสุด
+        Core.advice = function (stats) {
+          var total = 0;
+          var rests = 0;
+          PIECES.forEach(function (piece) {
+            var count = stats.pieceCounts[piece.id] || 0;
+            total += count;
+            if (piece.rest) rests += count;
+          });
+          if (rests * 3 > total) return 'ใช้ตัวหยุดค่อนข้างมาก ลองเก็บตัวหยุดไว้ก่อน แล้วใช้ตัวโน้ตเติมห้อง';
+          if (!stats.holdUses) return 'ยังไม่ได้ใช้ปุ่มเก็บ ลองเก็บชิ้นที่ยังไม่เข้าที่ไว้ใช้ทีหลัง';
+          if (stats.bestCombo < 3) return 'ลองวางให้ครบห้องติดกันหลายชิ้น คะแนนจะคูณเพิ่ม';
+          return 'เรียงได้ดีมาก ลองระดับที่ยากขึ้นหรือโหมดโจทย์จังหวะ';
+        };
+
+        // เงื่อนไขเหรียญที่ใช้ผลเกมและข้อมูลสะสม
+        Core.badgeRules = {
+          measures: function (s, n) { return s.measures >= n; },
+          combo: function (s, n) { return s.bestCombo >= n; },
+          targets: function (s, n) { return s.targetsHit >= n; },
+          sprint: function (s, n) { return s.mode === 'sprint' && s.success && s.ms <= n; },
+          sound: function (s, n) { return s.fullSoundMeasures >= n; },
+          meter: function (s, n) { return s.metersPlayed.length >= n; },
+          score: function (s, n) { return s.score >= n; }
+        };
+
+        // ตรวจกลไกใหม่ด้วยรูปแบบและตัวสุ่มที่กำหนดได้
+        function checkV2(check, rng) {
+          check('คิวและการเก็บชิ้น', function () {
+            var s = Core.newGame(LEVELS[0], CONFIG, rng());
+            var first = s.queue[0];
+            var held = Core.hold(s, rng());
+            return s.queue.length === CONFIG.queueLength && held.piece.kind === first
+              && held.held === s.piece.kind && held.piece.row === 0 && Core.hold(held, rng()) === held
+              && Core.hardDrop(held).state.holdUsed === false;
+          });
+          check('โจทย์ครบห้องและลำดับตัวโน้ต', function () {
+            return TARGETS.every(function (entry) {
+              var beats = METERS.find(function (meter) { return meter.id === entry.meter; }).beats;
+              var pieces = entry.pieces.map(function (kind) {
+                return PIECES.find(function (piece) { return piece.id === kind; });
+              });
+              var selected = LEVELS[levelRank(entry.level)];
+              return pieces.every(function (piece) { return selected.pieces[piece.id]; })
+                && pieces.reduce(function (sum, piece) { return sum + piece.units; }, 0) === beats * CONFIG.unitsPerBeat
+                && Core.matchesTarget(pieces.map(function (piece) { return { kind: piece.id }; }), entry);
+            });
+          });
+          check('การนับเมื่อเริ่มบนจังหวะยกและมีตัวหยุด', function () {
+            var rhythm = [{startCol:0}, {startCol:2,rest:true}, {startCol:3}, {startCol:4}];
+            return Core.countingText(rhythm, CONFIG) === '1 · (หยุด) · 2และ · 3';
+          });
+          check('เตือนเมื่อกองชิ้นอยู่ใกล้ขอบบน', function () {
+            var grid = Core.emptyGrid(CONFIG);
+            grid[CONFIG.dangerRows][0] = {kind:'quarter'};
+            if (Core.isDanger(grid)) return false;
+            grid[CONFIG.dangerRows - 1][0] = {kind:'quarter'};
+            return Core.isDanger(grid);
+          });
+          check('คะแนนคอมโบและเสียงเต็มห้อง', function () {
+            var game = Core.newGame(LEVELS[0], CONFIG, rng());
+            game.piece = null;
+            var base = CONFIG.scorePerMeasure + CONFIG.scorePerPiece;
+            for (var i = 1; i <= 3; i++) {
+              game = Core.spawn(game, 'whole');
+              var landed = Core.hardDrop(game);
+              var oldScore = game.score;
+              game = Core.clearRow(landed.state, landed.fullRow);
+              if (game.score - oldScore !== base * (1 + (i - 1) / 2) + CONFIG.fullSoundBonus) return false;
+            }
+            game = Core.spawn(game, 'quarter');
+            return game.bestCombo === 3 && Core.hardDrop(game).state.combo === 0;
+          });
+          MODES.forEach(function (mode) {
+            check('เล่นจนจบโหมด ' + mode.label, function () {
+              var conf = Object.assign({}, CONFIG, {mode:mode.id, meter:'4/4'});
+              var game = Core.newGame(LEVELS[0], conf, rng());
+              if (mode.id === 'sprint') {
+                for (var i = 0; i < CONFIG.sprintGoal; i++) {
+                  var landed = Core.hardDrop(Core.spawn(game,'whole'));
+                  game = Core.clearRow(landed.state, landed.fullRow);
+                }
+                return game.success && game.fallMs === LEVELS[0].startFallMs;
+              }
+              for (var row = 0; row <= CONFIG.rows; row++) {
+                if (game.over) break;
+                game = Core.hardDrop(Core.spawn(game,'quarter')).state;
+                game = Core.spawn(game,'quarter');
+              }
+              return game.over;
+            });
+          });
+          BADGES.forEach(function (badge) {
+            check('เหรียญ ' + badge.name, function () {
+              var good = {measures:12, bestCombo:4, targetsHit:6, mode:'sprint', success:true,
+                ms:80000, fullSoundMeasures:9, metersPlayed:['2/4','3/4','4/4'], score:4000};
+              var bad = {measures:0, bestCombo:0, targetsHit:0, mode:'marathon', success:false,
+                ms:0, fullSoundMeasures:0, metersPlayed:[], score:0};
+              return Core.badgeRules[badge.test](good, badge.goal) && !Core.badgeRules[badge.test](bad, badge.goal);
+            });
+          });
+        }
+        // ตรวจแกนเกมด้วยตัวอย่างที่ทำซ้ำได้
+        function runSelfCheck() {
+          var results = [];
+
+          // บันทึกผลการตรวจหนึ่งข้อ
+          function check(name, fn) {
+            try {
+              var ok = !!fn();
+              results.push({ name: name, ok: ok, detail: '' });
+            } catch (e) {
+              results.push({ name: name, ok: false, detail: String(e) });
+            }
+          }
+
+          // สร้างตัวสุ่มที่ให้ผลซ้ำได้
+          function rng() {
+            var x = 1234;
+            return function () {
+              x = (x * 1664525 + 1013904223) >>> 0;
+              return x / 4294967296;
+            };
+          }
+
+          // สร้างตัวอย่างแถวที่เต็ม
+          function fixture() {
+            var s = Core.newGame(LEVELS[0], CONFIG, rng()),
+              row = s.grid.length - 1;
+            [
+              ['quarter', 0, 2],
+              ['quarter', 2, 2],
+              ['half', 4, 4]
+            ].forEach(function (p, i) {
+              for (var j = 0; j < p[2]; j++)
+                s.grid[row][p[1] + j] = {
+                  pieceId: i + 1,
+                  kind: p[0],
+                  startCol: p[1],
+                  units: p[2]
+                };
+            });
+            return s;
+          }
+          var s = fixture(),
+            last = s.grid.length - 1,
+            rhythm = Core.rowRhythm(s.grid, last);
+          check('ตำแหน่งวางและขอบตาราง', function () {
+            return (
+              !Core.canPlace(s.grid, { units: 2 }, 0, -1) &&
+              !Core.canPlace(s.grid, { units: 2 }, last, 0) &&
+              Core.canPlace(s.grid, { units: 2 }, 0, 0)
+            );
+          });
+          check('เลื่อนชนขอบซ้ายและขวา', function () {
+            var n = Core.newGame(LEVELS[0], CONFIG, rng());
+            n.piece = { kind: 'quarter', units: 2, row: 0, col: 0 };
+            var left = Core.move(n, -1) === n;
+            n.piece.col = Core.cols(CONFIG) - 2;
+            return left && Core.move(n, 1) === n;
+          });
+          check('ตกถึงพื้นและชิ้นอื่น', function () {
+            var n = Core.newGame(LEVELS[0], CONFIG, rng());
+            n.piece = { kind: 'quarter', units: 2, row: CONFIG.rows - 1, col: 0 };
+            var floor = Core.stepDown(n);
+            n.grid[2][0] = { pieceId: 10 };
+            n.piece = { kind: 'quarter', units: 2, row: 1, col: 0 };
+            var atop = Core.stepDown(n);
+            return (
+              floor.locked &&
+              floor.state.grid[CONFIG.rows - 1][0] &&
+              atop.locked &&
+              atop.state.grid[1][0]
+            );
+          });
+          check('เติมห้องด้วยตัวดำสองและตัวขาว', function () {
+            var n = fixture();
+            n.grid[last][4] = n.grid[last][5] = n.grid[last][6] = n.grid[last][7] = null;
+            n.piece = { kind: 'half', units: 4, row: last, col: 4 };
+            return Core.stepDown(n).fullRow === last;
+          });
+          check('ล้างห้องและคิดคะแนน', function () {
+            var n = fixture();
+            n.grid[last - 1][0] = { pieceId: 99 };
+            var out = Core.clearRow(n, last);
+            return (
+              out.grid[last][0].pieceId === 99 &&
+              out.grid[0].every(function (c) {
+                return !c;
+              }) &&
+              out.score === 180
+            );
+          });
+          check('ลำดับและค่าจังหวะในห้อง', function () {
+            return (
+              rhythm.length === 3 &&
+              rhythm
+                .map(function (p) {
+                  return p.units;
+                })
+                .join() === '2,2,4' &&
+              rhythm.reduce(function (n, p) {
+                return n + p.units;
+              }, 0) === Core.cols(CONFIG)
+            );
+          });
+          check('กำหนดเวลาเสียงจังหวะ', function () {
+            return (
+              Core.rhythmSchedule(rhythm, CONFIG)
+                .map(function (p) {
+                  return p.atSec;
+                })
+                .join() === '0,0.25,0.5'
+            );
+          });
+          check('ถุงสุ่มถ่วงน้ำหนัก', function () {
+            var n = Core.newGame(LEVELS[0], CONFIG, rng()),
+              r = rng(),
+              seen = {};
+            for (var i = 0; i < 200; i++) {
+              var x = Core.nextKind(n, LEVELS[0], r);
+              seen[x.kind] = true;
+              n = x.state;
+            }
+            return (
+              Object.keys(seen).sort().join() === Object.keys(LEVELS[0].pieces).sort().join()
+            );
+          });
+          check('เกิดชิ้นใหม่บนช่องที่มีชิ้นอยู่', function () {
+            var n = Core.newGame(LEVELS[0], CONFIG, rng());
+            n.grid[0].fill({ pieceId: 1 });
+            return Core.spawn(n, 'quarter').over;
+          });
+          check('เพิ่มความเร็วและไม่เกินขีดจำกัด', function () {
+            var n = fixture();
+            n.measures = CONFIG.speedUpEvery - 1;
+            var fast = Core.clearRow(n, last);
+            n.fallMs = CONFIG.minFallMs;
+            n.measures = CONFIG.speedUpEvery - 1;
+            return (
+              fast.fallMs ===
+                Math.max(
+                  CONFIG.minFallMs,
+                  n.fallMs === CONFIG.minFallMs
+                    ? LEVELS[0].startFallMs * CONFIG.speedFactor
+                    : 0
+                ) && Core.clearRow(n, last).fallMs === CONFIG.minFallMs
+            );
+          });
+          check('ห้องสามจังหวะและตัวขาวประจุด', function () {
+            var c = Object.assign({}, CONFIG, { beatsPerMeasure: 3 }),
+              n = Core.newGame(LEVELS[0], c, rng());
+            n = Core.spawn(Object.assign({}, n, { over: false }), 'dottedHalf');
+            return Core.cols(c) === 6 && Core.hardDrop(n).fullRow === c.rows - 1;
+          });
+          check('ตัวหยุดไม่ส่งเสียง', function () {
+            var g = Core.emptyGrid(CONFIG);
+            g[0][0] = { pieceId: 1, startCol: 0, units: 2, kind: 'restFixture', rest: true };
+            return Core.rhythmSchedule(Core.rowRhythm(g, 0), CONFIG)[0].rest;
+          });
+          LEVELS.forEach(function (level) {
+            check('เติมห้องได้พอดี: ' + level.label, function () {
+              return Core.canFill(level, CONFIG);
+            });
+          });
+          checkV2(check, rng);
+          var passed = results.filter(function (r) {
+            return r.ok;
+          }).length;
+          return { passed: passed, failed: results.length - passed, results: results };
+        }
+        /* ═══════════ โซน D · หน้าจอและเสียง (ห้ามแก้ถ้าไม่จำเป็น) ═══════════ */
+        var handlers = {},
+          errors = [],
+          storageOK = true,
+          memory = {},
+          saved = read('measure-stack-settings-v1', {}),
+          best = read('measure-stack-best-v1', {}),
+          levelId = saved.level || 'easy',
+          volume =
+            typeof saved.volume === 'number' ? saved.volume : CONFIG.defaultVolumePercent,
+          game = null,
+          status = 'idle',
+          frame = null,
+          lastMs = 0,
+          elapsedMs = 0,
+          clearRowIndex = -1,
+          clearUntilMs = 0,
+          pauseStartedMs = 0,
+          soft = false,
+          repeatTimer = null,
+          confirmUntil = 0,
+          audio = null,
+          master = null;
+
+        var STATS = 'measure-stack-stats-v2';
+        var SETTINGS = 'measure-stack-settings-v1';
+        var LEGACY_BEST = 'measure-stack-best-v1';
+        var stats = read(STATS, null);
+        var screenId = 'home';
+        var modeId = 'marathon';
+        var meterId = '4/4';
+        var theme = saved.theme || 'auto';
+        var reduced = Boolean(saved.reduced);
+        var gameMs = 0;
+        var danger = false;
+        var ghostOn = true;
+        var toastTimer = null;
+
+        // คืนองค์ประกอบตามรหัส
+        function byId(id) {
+          return document.getElementById(id);
+        }
+
+        // ย้ายคะแนนสูงสุดจากรุ่นเดิมเข้าโหมดมาราธอน
+        function migrateStats() {
+          if (stats) return;
+          stats = {best: {}, badges: [], metersPlayed: [], seenHowto: false};
+          Object.keys(best).forEach(function (id) {
+            stats.best['marathon:4/4:' + id] = {score:best[id], measures:0, ms:0};
+          });
+          write(STATS,stats);
+        }
+
+        // เปิดหน้าที่เลือกและย้ายโฟกัสไปยังหัวเรื่อง
+        function showScreen(next) {
+          var from = screenId;
+          screenId = next;
+          document.querySelectorAll('[data-screen]').forEach(function (node) {
+            node.hidden = node.dataset.screen !== next;
+          });
+          document.querySelector('[data-screen="' + next + '"] h1').focus();
+          if (from !== next) emit('screenChange', {from:from,to:next});
+        }
+
+        // แสดงข้อความได้หนึ่งรายการแล้วซ่อนเมื่อครบเวลา
+        function showToast(text) {
+          clearTimeout(toastTimer);
+          var node = byId('toast');
+          node.hidden = false;
+          node.textContent = text;
+          toastTimer = setTimeout(function () { node.hidden = true; }, CONFIG.toastMs);
+        }
+
+        // สร้างปุ่มกลุ่มตัวเลือกสำหรับหน้าแรก
+        function choices(id, data, active, change) {
+          var root = byId(id);
+          root.textContent = '';
+          data.forEach(function (item) {
+            var b = document.createElement('button');
+            b.type = 'button';
+            b.textContent = item.label;
+            b.setAttribute('aria-pressed', String(item.id === active));
+            if (id === 'modeList' && item.about) {
+              var detail = document.createElement('small');
+              detail.textContent = item.about;
+              b.appendChild(detail);
+            }
+            b.disabled = id === 'levels' && (status === 'playing' || status === 'paused');
+            if (item.id === 'target') b.disabled = !Core.targetsFor(meterId, levelId).length;
+            b.onclick = function () {
+              change(item.id);
+              renderHome();
+              var selected = root.querySelector('[aria-pressed="true"]');
+              if (selected) selected.focus();
+            };
+            root.appendChild(b);
+          });
+        }
+
+        // เลือกค่าและอัปเดตสถิติที่แสดง
+        function renderHome() {
+          choices('modeList', MODES, modeId, function (id) { modeId = id; });
+          choices('meterList', METERS, meterId, function (id) { meterId = id; });
+          choices('levels', LEVELS, levelId, function (id) { levelId = id; saveSettings(); });
+          var record = stats.best[modeId + ':' + meterId + ':' + levelId];
+          byId('homeBest').textContent = modeId === 'sprint' && record
+            ? 'ใช้เวลา ' + timeText(record.ms)
+            : 'คะแนนสูงสุด ' + (record ? record.score : 0);
+          var unavailable = !Core.targetsFor(meterId, levelId).length;
+          byId('targetNotice').textContent = unavailable ? 'ยังไม่มีโจทย์สำหรับอัตราจังหวะและระดับนี้' : '';
+          byId('start').disabled = modeId === 'target' && unavailable;
+          renderBadges();
+        }
+
+        // วาดเหรียญตามสถานะสะสม
+        function medal(badge) {
+          var ns = 'http://www.w3.org/2000/svg';
+          var svg = document.createElementNS(ns,'svg');
+          var line = document.createElementNS(ns,'path');
+          var circle = document.createElementNS(ns,'circle');
+          svg.setAttribute('viewBox','0 0 32 32');
+          svg.setAttribute('class','medal' + (stats.badges.indexOf(badge.id) < 0 ? '' : ' earned'));
+          svg.setAttribute('aria-label',badge.name + ' · ' + badge.hint);
+          svg.setAttribute('role','img');
+          line.setAttribute('d','M9 3l3 11m11-11l-3 11');
+          line.setAttribute('stroke','currentColor');
+          circle.setAttribute('cx','16');
+          circle.setAttribute('cy','22');
+          circle.setAttribute('r','7');
+          circle.setAttribute('stroke','currentColor');
+          svg.append(line,circle);
+          return svg;
+        }
+
+        // แสดงเหรียญในหน้าแรกและรายการคำอธิบาย
+        function renderBadges() {
+          byId('medals').textContent = '';
+          byId('badgeList').textContent = '';
+          BADGES.forEach(function (badge) {
+            byId('medals').appendChild(medal(badge));
+            var row = document.createElement('li');
+            row.append(medal(badge),badge.name + ' · ' + badge.hint);
+            byId('badgeList').appendChild(row);
+          });
+        }
+
+        // วาดลำดับตัวโน้ตให้ใช้ได้ทั้งในแอปและส่วนเสริม
+        function drawRhythm(pieces) {
+          var ns = 'http://www.w3.org/2000/svg';
+          var svg = document.createElementNS(ns,'svg');
+          svg.setAttribute('viewBox','0 0 ' + Math.max(1,pieces.length * 30) + ' 30');
+          svg.setAttribute('role','img');
+          var names = [];
+          pieces.forEach(function (piece,index) {
+            var id = typeof piece === 'string' ? piece : piece.kind;
+            var note = drawNote(id);
+            note.setAttribute('x',index * 30);
+            note.setAttribute('width',30);
+            note.setAttribute('height',30);
+            svg.appendChild(note);
+            var row = PIECES.find(function (p) { return p.id === id; });
+            if (row) names.push(row.name);
+          });
+          svg.setAttribute('aria-label',names.join(' · '));
+          return svg;
+        }
+
+        // ปรับข้อมูลชิ้นถัดไป ชิ้นเก็บ โจทย์ และห้องล่าสุด
+        function renderTraining() {
+          if (!game) return;
+          var queue = byId('queue');
+          queue.textContent = '';
+          game.queue.forEach(function (kind) { queue.appendChild(drawNote(kind)); });
+          byId('held').textContent = '';
+          if (game.held) byId('held').appendChild(drawNote(game.held));
+          byId('targetCard').hidden = !game.target;
+          byId('targetNotes').textContent = '';
+          if (game.target) {
+            game.target.pieces.forEach(function (kind) {
+              byId('targetNotes').appendChild(drawNote(kind));
+            });
+          }
+          byId('lastNotation').textContent = '';
+          byId('lastCount').textContent = 'เติมห้องแรกให้ครบ แล้วจะเห็นจังหวะของห้องนั้นตรงนี้';
+          if (game.lastRhythm) {
+            byId('lastNotation').appendChild(drawRhythm(game.lastRhythm));
+            byId('lastCount').textContent = 'นับ: ' + Core.countingText(game.lastRhythm,game.config);
+          }
+          byId('combo').textContent = game.combo < 2 ? '' : 'คอมโบ ×' + game.combo;
+          byId('speed').textContent = String(Math.round(level().startFallMs / game.fallMs * 10) / 10);
+          byId('sprintClock').hidden = game.mode !== 'sprint';
+          byId('sprintTime').textContent = timeText(gameMs);
+        }
+
+        // เก็บชิ้นในช่องพักเมื่อกติกาอนุญาต
+        function holdPiece() {
+          if (status !== 'playing' || clearRowIndex >= 0) return;
+          var next = Core.hold(game, Math.random);
+          if (next === game) return;
+          game = next;
+          if (game.over) { over(); return; }
+          elapsedMs = 0;
+          emit('holdUsed',{held:game.held,now:game.piece.kind});
+          spawnEvent();
+          render();
+        }
+
+        // ส่งเหตุการณ์เมื่อเข้าสู่หรือออกจากแถวเตือนภัย
+        function updateDanger() {
+          var next = Core.isDanger(game.grid, game.config.dangerRows);
+          if (danger === next) return;
+          danger = next;
+          if (danger) playTone(146.83,0.22,0);
+          emit('dangerChange',{danger:danger});
+        }
+
+        // คืนเวลาที่ใช้ในรูปแบบนาทีและวินาที
+        function timeText(ms) {
+          var s = Math.floor(ms / 1000);
+          return Math.floor(s / 60) + ':' + String(s % 60).padStart(2,'0');
+        }
+
+        // คำนวณและแสดงผลสรุป สถิติ เหรียญ และกราฟการใช้ตัวโน้ต
+        function finishGame() {
+          var success = Boolean(game.success);
+          var ms = Math.round(gameMs);
+          var result = {
+            mode:game.mode, meter:game.meter, level:levelId, success:success,
+            score:game.score, measures:game.measures, bestCombo:game.bestCombo, targetsHit:game.targetsHit,
+            fullSoundMeasures:game.fullSoundMeasures, ms:ms, pieceCounts:Object.assign({},game.pieceCounts)
+          };
+          if (stats.metersPlayed.indexOf(game.meter) < 0) stats.metersPlayed.push(game.meter);
+          var key = [game.mode,game.meter,levelId].join(':');
+          var old = stats.best[key];
+          var isNew = game.mode === 'sprint' ? success && (!old || ms < old.ms) : !old || game.score > old.score;
+          if (isNew) stats.best[key] = {score:game.score,measures:game.measures,ms:ms};
+          var context = Object.assign({metersPlayed:stats.metersPlayed},result);
+          var fresh = BADGES.filter(function (badge) {
+            return stats.badges.indexOf(badge.id) < 0 && Core.badgeRules[badge.test](context,badge.goal);
+          });
+          fresh.forEach(function (badge) {
+            stats.badges.push(badge.id);
+            emit('badgeEarned',{id:badge.id,name:badge.name});
+          });
+          write(STATS,stats);
+          byId('resultTitle').textContent = success ? 'ครบ 12 ห้องแล้ว' : 'จบเกม';
+          byId('resultScore').textContent = success ? 'ใช้เวลา ' + timeText(ms) : 'คะแนน ' + game.score;
+          var detail = byId('resultDetails');
+          detail.classList.remove('is-revealed');
+          detail.textContent = '';
+          var lines = [
+            'ครบ ' + game.measures + ' ห้อง',
+            'คอมโบสูงสุด ' + game.bestCombo,
+            'ทำตามโจทย์ได้ ' + game.targetsHit + ' ครั้ง',
+            'ห้องที่ไม่มีตัวหยุด ' + game.fullSoundMeasures + ' ห้อง'
+          ];
+          if (isNew) lines.unshift('สถิติใหม่ของโหมดนี้');
+          lines.forEach(function (text, index) {
+            var line = document.createElement('p');
+            line.textContent = text;
+            line.style.setProperty('--result-order',index);
+            detail.appendChild(line);
+          });
+          byId('usedPieces').textContent = '';
+          var max = Math.max(1,...Object.values(game.pieceCounts));
+          PIECES.forEach(function (note) {
+            var count = game.pieceCounts[note.id];
+            if (!count) return;
+            var row = document.createElement('p');
+            var bar = document.createElement('meter');
+            bar.max = max;
+            bar.value = count;
+            bar.setAttribute('aria-label',note.name);
+            row.append(drawNote(note.id),bar,String(count));
+            byId('usedPieces').appendChild(row);
+          });
+          byId('advice').textContent = Core.advice(game);
+          showScreen('result');
+          detail.getBoundingClientRect();
+          detail.classList.add('is-revealed');
+          var systemReduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+          if (!success && !reduced && !systemReduced) animateScore(game.score);
+          if (fresh.length) showToast('ได้เหรียญ "' + fresh[0].name + '"');
+          emit('gameEnd',result);
+        }
+
+        // แสดงคะแนนเพิ่มทีละช่วงบนหน้าผล
+        function animateScore(score) {
+          var start = performance.now();
+          var timer = setInterval(function () {
+            var portion = Math.min(1,(performance.now() - start) / CONFIG.resultCountMs);
+            byId('resultScore').textContent = 'คะแนน ' + Math.round(score * portion);
+            if (screenId !== 'result' || portion === 1) clearInterval(timer);
+          },CONFIG.resultTickMs);
+        }
+
+        // เปิดหน้าแรกหลังจบรอบหรือออกจากเกม
+        function returnHome() {
+          if (frame !== null) cancelAnimationFrame(frame);
+          frame = null;
+          stopRepeat();
+          status = 'idle';
+          showScreen('home');
+          renderHome();
+        }
+
+        // บันทึกค่าการแสดงผลของเกม
+        function saveSettings() {
+          write(SETTINGS,{level:levelId,volume:volume,theme:theme,reduced:reduced});
+        }
+
+        // ปรับธีมและการเคลื่อนไหว
+        function applyPreferences() {
+          document.documentElement.dataset.theme = theme;
+          document.documentElement.dataset.reduce = String(reduced);
+          byId('theme').value = theme;
+          byId('reduce').checked = reduced;
+        }
+
+        // เติมวิธีเล่นพร้อมภาพประกอบจังหวะ
+        function renderHowto() {
+          HOWTO.forEach(function (row,index) {
+            var step = document.createElement('li');
+            step.append(drawNote(['quarter','eighth','half','quarterRest'][index]),row);
+            byId('howtoList').appendChild(step);
+          });
+        }
+
+        // อ่านข้อมูลที่บันทึกไว้
+        function read(key, fallback) {
+          try {
+            var s = localStorage.getItem(key);
+            return s ? JSON.parse(s) : fallback;
+          } catch (e) {
+            storageOK = false;
+            return memory[key] || fallback;
+          }
+        }
+
+        // บันทึกข้อมูลในเครื่อง
+        function write(key, value) {
+          memory[key] = value;
+          try {
+            localStorage.setItem(key, JSON.stringify(value));
+          } catch (e) {
+            storageOK = false;
+            notice();
+          }
+        }
+
+        // แสดงข้อความเมื่อบันทึกข้อมูลไม่ได้
+        function notice() {
+          document.getElementById('notice').textContent = storageOK
+            ? ''
+            : 'เบราว์เซอร์นี้เก็บคะแนนสูงสุดไม่ได้ เกมยังเล่นได้ตามปกติ';
+        }
+
+        // ลงทะเบียนผู้รับเหตุการณ์
+        function on(name, fn) {
+          (handlers[name] || (handlers[name] = [])).push(fn);
+        }
+
+        // แจ้งเหตุการณ์และแยกข้อผิดพลาดของส่วนเสริม
+        function emit(name, detail) {
+          (handlers[name] || []).forEach(function (fn) {
+            try {
+              fn(detail);
+            } catch (e) {
+              errors.push(String(e));
+              console.warn(String(e));
+              showCheck();
+            }
+          });
+        }
+
+        // คืนข้อมูลระดับที่เลือก
+        function level() {
+          return (
+            LEVELS.find(function (l) {
+              return l.id === levelId;
+            }) || LEVELS[0]
+          );
+        }
+
+        // เตรียมเสียงหลังการแตะหรือคลิก
+        function initAudio() {
+          if (audio) {
+            if (audio.resume) audio.resume().catch(function () {});
+            return;
+          }
+          try {
+            var AC = window.AudioContext || window.webkitAudioContext;
+            if (!AC) return;
+            audio = new AC();
+            master = audio.createGain();
+            master.gain.value = CONFIG.masterGain;
+            master.connect(audio.destination);
+            if (audio.resume) audio.resume().catch(function () {});
+          } catch (e) {
+            audio = null;
+          }
+        }
+
+        // เล่นเสียงตามความถี่และระยะเวลาที่ระบุ
+        function playTone(hz, durSec, whenSec) {
+          if (!audio || !master) return;
+          try {
+            var t = audio.currentTime + (whenSec || 0),
+              osc = audio.createOscillator(),
+              gain = audio.createGain(),
+              r = CONFIG.audioRampSec;
+            osc.type = 'triangle';
+            osc.frequency.value = hz;
+            gain.gain.setValueAtTime(0, t);
+            gain.gain.linearRampToValueAtTime(volume / 100, t + r);
+            gain.gain.setValueAtTime(volume / 100, t + Math.max(r, durSec - r));
+            gain.gain.linearRampToValueAtTime(0, t + durSec);
+            osc.connect(gain);
+            gain.connect(master);
+            osc.start(t);
+            osc.stop(t + durSec + r);
+          } catch (e) {}
+        }
+
+        // วาดตัวโน้ตหรือเครื่องหมายหยุด
+        function drawNote(kind) {
+          var p =
+              typeof kind === 'object'
+                ? kind
+                : PIECES.find(function (x) {
+                    return x.id === kind;
+                  }),
+            ns = 'http://www.w3.org/2000/svg',
+            svg = document.createElementNS(ns, 'svg');
+          svg.setAttribute('viewBox', '0 0 30 30');
+          svg.setAttribute('aria-hidden', 'true');
+          if (!p) return svg;
+
+          // เพิ่มองค์ประกอบ SVG
+          function el(tag, attrs) {
+            var e = document.createElementNS(ns, tag);
+            Object.keys(attrs).forEach(function (k) {
+              e.setAttribute(k, attrs[k]);
+            });
+            svg.appendChild(e);
+          }
+          if (p.rest) {
+            el('path', {
+              d: p.restShape === 'half' ? 'M4 20h22M11 20v-5h8v5'
+                : p.restShape === 'eighth' ? 'M9 10q2 8 11 2l-5 15'
+                : 'M11 6 L18 10 L13 15 L19 19 L11 24',
+              fill: 'none',
+              stroke: 'currentColor',
+              'stroke-width': 2
+            });
+            return svg;
+          }
+          el('ellipse', {
+            cx: 10,
+            cy: 21,
+            rx: 6,
+            ry: 4,
+            transform: 'rotate(-18 10 21)',
+            fill: p.head === 'open' ? 'var(--surface)' : 'currentColor',
+            stroke: 'currentColor',
+            'stroke-width': 1.5
+          });
+          if (p.stem)
+            el('path', {
+              d: 'M16 21 V4',
+              fill: 'none',
+              stroke: 'currentColor',
+              'stroke-width': 1.5
+            });
+          if (p.flag)
+            el('path', {
+              d: 'M16 4 Q25 9 20 16',
+              fill: 'none',
+              stroke: 'currentColor',
+              'stroke-width': 1.5
+            });
+          if (p.dot) el('circle', { cx: 22, cy: 21, r: 1.5, fill: 'currentColor' });
+          return svg;
+        }
+
+        // วาดกระดาน คะแนน และตัวควบคุม
+        function render() {
+          var config = game ? game.config : CONFIG;
+          var cols = Core.cols(config),
+            board = document.getElementById('board'),
+            beats = document.getElementById('beats');
+          board.style.setProperty('--cols', cols);
+          board.style.setProperty('--rows', config.rows);
+          beats.style.setProperty('--beats', config.beatsPerMeasure);
+          beats.textContent = '';
+          for (var b = 0; b < config.beatsPerMeasure; b++) {
+            var beat = document.createElement('span');
+            beat.textContent = b + 1;
+            beats.appendChild(beat);
+          }
+          board.textContent = '';
+          var grid = document.createElement('div');
+          grid.className = 'cell-grid';
+          for (var i = 0; i < config.rows * cols; i++) {
+            var cell = document.createElement('span');
+            if ((i + 1) % config.unitsPerBeat === 0) cell.className = 'is-beat';
+            grid.appendChild(cell);
+          }
+          board.appendChild(grid);
+
+          // วาดชิ้นโน้ตหนึ่งชิ้น
+          function bar(p, row, col, kind) {
+            var el = document.createElement('div');
+            el.className = 'bar ' + kind + (p.rest && kind !== 'is-ghost' ? ' is-rest' : '');
+            el.style.setProperty('--row', row);
+            el.style.setProperty('--col', col);
+            el.style.setProperty('--units', p.units);
+            if (kind !== 'is-ghost') {
+              el.appendChild(drawNote(p.kind));
+              var data = PIECES.find(function (x) {
+                return x.id === p.kind;
+              });
+              if (data && p.units >= 3) {
+                var text = document.createElement('span');
+                text.textContent = data.name;
+                el.appendChild(text);
+              }
+            }
+            board.appendChild(el);
+          }
+          if (game) {
+            if (danger) {
+              var warning = document.createElement('div');
+              warning.className = 'danger-row';
+              warning.style.setProperty('--danger-rows', config.dangerRows);
+              warning.textContent = 'ใกล้เต็มแล้ว';
+              board.appendChild(warning);
+            }
+            var seen = {};
+            game.grid.forEach(function (row, r) {
+              row.forEach(function (c) {
+                if (c && !seen[c.pieceId]) {
+                  seen[c.pieceId] = true;
+                  bar(c, r, c.startCol, 'is-locked');
+                }
+              });
+            });
+            if (game.piece && !game.over) {
+              var p = game.piece,
+                ghost = p.row;
+              while (Core.canPlace(game.grid, p, ghost + 1, p.col)) ghost++;
+              if (ghostOn && ghost !== p.row) bar(p, ghost, p.col, 'is-ghost');
+              bar(p, p.row, p.col, 'is-active');
+            }
+            if (clearRowIndex >= 0) {
+              var label = document.createElement('div');
+              label.className = 'clear-label';
+              label.style.setProperty('--row', clearRowIndex);
+              label.textContent = 'ครบห้อง';
+              board.appendChild(label);
+            }
+          }
+          byId('score').textContent = game ? game.score : 0;
+          byId('measures').textContent = !game ? '0' : game.mode === 'sprint'
+            ? game.measures + ' จาก ' + game.config.sprintGoal : game.measures;
+          renderTraining();
+          document.querySelectorAll('.controls button').forEach(function (button) {
+            button.disabled = status !== 'playing' || clearRowIndex >= 0
+              || (button.dataset.control === 'hold' && game.holdUsed);
+          });
+        }
+
+        // เริ่มรอบและตัวจับเวลา
+        function start() {
+          var meter = METERS.find(function (item) { return item.id === meterId; }) || METERS[2];
+          if (modeId === 'target' && !Core.targetsFor(meterId, levelId).length) return;
+          initAudio();
+          if (frame !== null) cancelAnimationFrame(frame);
+          var config = Object.assign({}, CONFIG, {mode:modeId, meter:meterId, beatsPerMeasure:meter.beats});
+          game = Core.newGame(level(), config, Math.random);
+          status = 'playing';
+          gameMs = 0;
+          danger = false;
+          clearRowIndex = -1;
+          elapsedMs = 0;
+          confirmUntil = 0;
+          byId('quit').textContent = 'ออก';
+          lastMs = performance.now();
+          showScreen('play');
+          renderHome();
+          render();
+          emit('gameStart', {level:levelId,cols:Core.cols(config),rows:config.rows});
+          if (game.target) emit('targetSet',{pieces:game.target.pieces.slice()});
+          spawnEvent();
+          if (game.over) {
+            over();
+            return;
+          }
+          frame = requestAnimationFrame(tick);
+        }
+
+        // แจ้งการเกิดชิ้นใหม่
+        function spawnEvent() {
+          if (!game || !game.piece) return;
+          var p = PIECES.find(function (x) {
+            return x.id === game.piece.kind;
+          });
+          emit('pieceSpawn', {
+            kind: game.piece.kind,
+            units: game.piece.units,
+            name: p ? p.name : ''
+          });
+        }
+
+        // นำชิ้นถัดไปออกมา
+        function spawnNext() {
+          game = Core.spawnQueued(game, Math.random);
+          if (game.over) over();
+          else spawnEvent();
+        }
+
+        // เลื่อนลงหรือล็อกชิ้นและรอเคลียร์แถว
+        function handleStep(drop) {
+          if (status !== 'playing' || clearRowIndex >= 0) return;
+          var old = game.piece,
+            result = drop ? Core.hardDrop(game) : Core.stepDown(game);
+          game = result.state;
+          if (result.locked) {
+            updateDanger();
+            playTone(CONFIG.lockToneHz, CONFIG.lockToneSec, 0);
+            var lockRow = game.grid.findIndex(function (row) {
+              return row.some(function (cell) {
+                return cell && cell.pieceId === game.nextPieceId - 1;
+              });
+            });
+            emit('pieceLock', { kind: old.kind, row: lockRow, col: old.col });
+            if (result.fullRow >= 0) {
+              clearRowIndex = result.fullRow;
+              clearUntilMs = performance.now() + CONFIG.clearShowMs;
+              Core.rhythmSchedule(Core.rowRhythm(game.grid, clearRowIndex), game.config).forEach(
+                function (n) {
+                  if (!n.rest) playTone(MELODY_HZ[game.measures % MELODY_HZ.length], n.durSec, n.atSec);
+                }
+              );
+            } else spawnNext();
+          }
+          render();
+        }
+
+        // ขยับเกมตามเวลาของเบราว์เซอร์
+        function tick() {
+          frame = null;
+          if (status !== 'playing') return;
+          var now = performance.now();
+          var dt = now - lastMs;
+          lastMs = now;
+          gameMs += dt;
+          if (game.mode === 'sprint') byId('sprintTime').textContent = timeText(gameMs);
+          if (clearRowIndex >= 0) {
+            if (now >= clearUntilMs) completeMeasure();
+            elapsedMs = 0;
+          } else {
+            elapsedMs += dt;
+            var interval = soft ? CONFIG.softDropMs : game.fallMs;
+            if (elapsedMs >= interval) {
+              elapsedMs = 0;
+              handleStep(false);
+            }
+          }
+          if (status === 'playing') frame = requestAnimationFrame(tick);
+        }
+
+        // เคลียร์แถว ให้คะแนน แจ้งผลจังหวะ และเริ่มชิ้นถัดไป
+        function completeMeasure() {
+          var row = clearRowIndex;
+          clearRowIndex = -1;
+          var deltaFrom = game.score;
+          var target = game.target;
+          var hz = MELODY_HZ[game.measures % MELODY_HZ.length];
+          game = Core.clearRow(game, row, Math.random);
+          var rhythm = game.lastRhythm;
+          var counting = Core.countingText(rhythm, game.config);
+          var detail = {
+            row:row, rhythm:rhythm, pieces:rhythm.length, score:game.score, measures:game.measures,
+            fallMs:game.fallMs, counting:counting, combo:game.combo, matchedTarget:game.matchedTarget, hz:hz
+          };
+          emit('measureClear',detail);
+          emit('scoreChange',{score:game.score,delta:game.score - deltaFrom,combo:game.combo});
+          var score = byId('score');
+          score.classList.remove('score-pop');
+          score.getBoundingClientRect();
+          score.classList.add('score-pop');
+          if (game.matchedTarget) {
+            showToast('ตรงโจทย์');
+            byId('targetCard').classList.add('did-match');
+            setTimeout(function () { byId('targetCard').classList.remove('did-match'); }, 180);
+            playTone(523.25,0.12,game.config.rhythmSeconds);
+            playTone(783.99,0.12,game.config.rhythmSeconds + 0.12);
+            emit('targetHit',{pieces:target.pieces.slice(),targetsHit:game.targetsHit});
+            emit('targetSet',{pieces:game.target.pieces.slice()});
+          }
+          if (game.combo >= 3) playTone(880,0.1,game.config.rhythmSeconds + 0.24);
+          updateDanger();
+          if (game.success) endSprint();
+          else spawnNext();
+          render();
+        }
+
+        // จบรอบที่สร้างครบสิบสองห้องในโหมดจับเวลา
+        function endSprint() {
+          status = 'over';
+          stopRepeat();
+          playTone(523.25, 0.14, 0);
+          playTone(783.99, 0.2, 0.14);
+          finishGame();
+        }
+
+        // หยุดรอบชั่วคราว
+        function pause() {
+          if (status !== 'playing') return;
+          status = 'paused';
+          pauseStartedMs = performance.now();
+          soft = false;
+          stopRepeat();
+          if (frame !== null) {
+            cancelAnimationFrame(frame);
+            frame = null;
+          }
+          showScreen('paused');
+          emit('pause', {});
+        }
+
+        // เล่นต่อจากที่หยุด
+        function resume() {
+          if (status !== 'paused') return;
+          initAudio();
+          if (clearRowIndex >= 0) clearUntilMs += performance.now() - pauseStartedMs;
+          status = 'playing';
+          lastMs = performance.now();
+          showScreen('play');
+          render();
+          emit('resume', {});
+          frame = requestAnimationFrame(tick);
+        }
+
+        // จบรอบและบันทึกผล
+        function over() {
+          status = 'over';
+          stopRepeat();
+          if (frame !== null) {
+            cancelAnimationFrame(frame);
+            frame = null;
+          }
+          var old = best[levelId] || 0,
+            isNew = game.score > old;
+          if (isNew && game.mode === 'marathon' && game.meter === '4/4') {
+            best[levelId] = game.score;
+            write('measure-stack-best-v1', best);
+          }
+          game = Object.assign({}, game, { isNewBest: isNew });
+          playTone(CONFIG.overHighHz, CONFIG.overFirstSec, 0);
+          playTone(CONFIG.overLowHz, CONFIG.overSecondSec, CONFIG.overFirstSec);
+          render();
+          emit('gameOver', {
+            level: levelId,
+            score: game.score,
+            measures: game.measures,
+            best: best[levelId] || 0,
+            isNewBest: isNew
+          });
+          finishGame();
+        }
+
+        // เลื่อนชิ้นที่กำลังตก
+        function move(d) {
+          if (status !== 'playing' || clearRowIndex >= 0) return;
+          game = Core.move(game, d);
+          render();
+        }
+
+        // หยุดการกดค้าง
+        function stopRepeat() {
+          clearTimeout(repeatTimer);
+          clearInterval(repeatTimer);
+          repeatTimer = null;
+          soft = false;
+        }
+        Array.prototype.forEach.call(
+          document.querySelectorAll('[data-control]'),
+          function (button) {
+            var action = button.dataset.control;
+            button.addEventListener('pointerdown', function (e) {
+              e.preventDefault();
+              initAudio();
+              if (status !== 'playing' || clearRowIndex >= 0) return;
+              if (button.setPointerCapture) button.setPointerCapture(e.pointerId);
+              if (action === 'hold') { holdPiece(); return; }
+              if (action === 'drop') {
+                handleStep(true);
+                return;
+              }
+              if (action === 'down') {
+                soft = true;
+                return;
+              }
+              var d = action === 'left' ? -1 : 1;
+              move(d);
+              repeatTimer = setTimeout(function () {
+                repeatTimer = setInterval(function () {
+                  move(d);
+                }, CONFIG.repeatMs);
+              }, CONFIG.repeatDelayMs);
+            });
+            button.addEventListener('pointerup', stopRepeat);
+            button.addEventListener('pointercancel', stopRepeat);
+            button.addEventListener('lostpointercapture', stopRepeat);
+            button.addEventListener('click', function (e) {
+              if (e.detail !== 0) return;
+              if (action === 'drop') handleStep(true);
+              else if (action === 'left') move(-1);
+              else if (action === 'right') move(1);
+              else if (action === 'down') handleStep(false);
+              else if (action === 'hold') holdPiece();
+            });
+          }
+        );
+        document.addEventListener('keydown', function (e) {
+          if (e.key.toLowerCase() === 'p' && !e.repeat) {
+            if (status === 'playing') pause();
+            else if (status === 'paused') resume();
+            return;
+          }
+          if (status !== 'playing') return;
+          var key = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+          if (['ArrowLeft', 'ArrowRight', 'ArrowDown', ' ', 'c'].indexOf(key) < 0) return;
+          e.preventDefault();
+          initAudio();
+          if (e.key === 'ArrowDown') {
+            soft = true;
+            return;
+          }
+          if (e.repeat) return;
+          if (e.key === 'ArrowLeft') move(-1);
+          if (e.key === 'ArrowRight') move(1);
+          if (e.key === ' ') handleStep(true);
+          if (e.key.toLowerCase() === 'c') holdPiece();
+        });
+        document.addEventListener('keyup', function (e) {
+          if (e.key === 'ArrowDown') soft = false;
+        });
+        document.addEventListener('visibilitychange', function () {
+          if (document.hidden && status === 'playing') pause();
+        });
+
+        // แสดงสถานะการตรวจระบบ
+        function showCheck() {
+          var r = runSelfCheck(),
+            box = document.getElementById('checkResult');
+          box.hidden = false;
+          box.textContent = '';
+          var h = document.createElement('p');
+          h.className = r.failed ? 'is-fail' : 'is-pass';
+          h.textContent = r.failed
+            ? '× ไม่ผ่าน ' + r.failed + ' ข้อ'
+            : '✓ ผ่าน ' + r.passed + ' จาก ' + r.results.length + ' ข้อ';
+          box.appendChild(h);
+          var ul = document.createElement('ul');
+          r.results.forEach(function (x) {
+            var li = document.createElement('li');
+            li.textContent = (x.ok ? 'ผ่าน ' : 'ไม่ผ่าน ') + x.name;
+            ul.appendChild(li);
+          });
+          box.appendChild(ul);
+          var info = document.createElement('p');
+          info.textContent =
+            'ตัวโน้ต ' +
+            PIECES.length +
+            ' · ระดับ ' +
+            LEVELS.length +
+            ' · ' +
+            (storageOK ? 'บันทึกได้' : 'บันทึกไม่ได้');
+          box.appendChild(info);
+          info.append(' · โหมด ' + MODES.length + ' · เหรียญ ' + BADGES.length + ' · หน้า 6');
+          errors.forEach(function (e) {
+            var p = document.createElement('p');
+            p.textContent = 'ส่วนเสริม: ' + e;
+            box.appendChild(p);
+          });
+        }
+        window.Game = {
+          on: on,
+          getState: function () {
+            return { status: status, game: game ? JSON.parse(JSON.stringify(game)) : null };
+          },
+          CONFIG: CONFIG,
+          DATA: { PIECES:PIECES, LEVELS:LEVELS, MODES:MODES, METERS:METERS, TARGETS:TARGETS,
+            MELODY_HZ:MELODY_HZ, BADGES:BADGES },
+          getStats: function () { return JSON.parse(JSON.stringify(stats)); },
+          getQueue: function () { return game ? game.queue.slice() : []; },
+          drawRhythm: drawRhythm,
+          showToast: showToast,
+          setGhost: function (on) { ghostOn = Boolean(on); render(); },
+          Core: Core,
+          runSelfCheck: runSelfCheck,
+          playTone: playTone,
+          peekNext: function () {
+            return game ? game.next : null;
+          },
+          drawNote: drawNote,
+          start: start,
+          pause: pause,
+          resume: resume
+        };
+        byId('start').onclick = start;
+        byId('again').onclick = start;
+        byId('pause').onclick = pause;
+        byId('resume').onclick = resume;
+        byId('modeBack').onclick = returnHome;
+        byId('howtoShow').onclick = function () { showScreen('howto'); };
+        byId('howtoClose').onclick = function () {
+          stats.seenHowto = true;
+          write(STATS,stats);
+          returnHome();
+        };
+        byId('badgeShow').onclick = function () { showScreen('badges'); };
+        byId('badgeClose').onclick = returnHome;
+        byId('quit').onclick = function () {
+          if (performance.now() < confirmUntil) returnHome();
+          else {
+            confirmUntil = performance.now() + CONFIG.confirmMs;
+            this.textContent = 'กดอีกครั้งเพื่อออก';
+            setTimeout(function () { byId('quit').textContent = 'ออก'; }, CONFIG.confirmMs);
+          }
+        };
+        byId('theme').onchange = function () {
+          theme = this.value;
+          applyPreferences();
+          saveSettings();
+        };
+        byId('reduce').onchange = function () {
+          reduced = this.checked;
+          applyPreferences();
+          saveSettings();
+        };
+        var clearStatsUntil = 0;
+        byId('clearStats').onclick = function () {
+          if (performance.now() < clearStatsUntil) {
+            [STATS,SETTINGS,LEGACY_BEST].forEach(function (key) {
+              delete memory[key];
+              try { localStorage.removeItem(key); } catch (e) { storageOK = false; }
+            });
+            stats = null;
+            best = {};
+            migrateStats();
+            renderHome();
+            clearStatsUntil = 0;
+            this.textContent = 'ล้างข้อมูลของเกมนี้';
+          } else {
+            clearStatsUntil = performance.now() + CONFIG.confirmMs;
+            this.textContent = 'กดอีกครั้งเพื่อล้างข้อมูล';
+            setTimeout(function () { byId('clearStats').textContent = 'ล้างข้อมูลของเกมนี้'; }, CONFIG.confirmMs);
+          }
+        };
+        byId('volume').value = volume;
+        byId('volume').oninput = function () { volume = Number(this.value); saveSettings(); };
+        byId('sound').onclick = function () {
+          initAudio();
+          playTone(CONFIG.testToneHz, CONFIG.testToneSec, 0);
+        };
+        byId('check').onclick = showCheck;
+        notice();
+        migrateStats();
+        applyPreferences();
+        renderHowto();
+        renderHome();
+        render();
+        if (!stats.seenHowto) showScreen('howto');
+        if (new URLSearchParams(location.search).get('selfcheck') === '1') {
+          document.querySelector('.settings').open = true;
+          showCheck();
+        }
+        /* ═══════════ โซน E · ส่วนเสริมของนิสิต (เขียนเพิ่มที่นี่) ═══════════ */
+        /* เพิ่มส่วนเสริมที่นี่ */
+        /* Game.on('gameStart', function (detail) {}); */
+      }());
+    </script>
+  </body>
+</html>
